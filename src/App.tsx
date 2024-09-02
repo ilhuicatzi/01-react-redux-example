@@ -1,7 +1,7 @@
 import { Route, Routes } from 'react-router-dom'
 import HomePage from './pages/HomePage'
 import AboutPage from './pages/AboutPage'
-import DashboardPage from './pages/DashboardPage'
+import NewTask from './pages/NewTask'
 import Navbar from './components/navbar/Navbar'
 
 function App() {
@@ -11,7 +11,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/newTask" element={<NewTask />} />
       </Routes>
     </div>
   )
