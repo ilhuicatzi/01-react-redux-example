@@ -1,1 +1,1 @@
-# Template Vitejs + Shacdn
+# Example React Redux App
