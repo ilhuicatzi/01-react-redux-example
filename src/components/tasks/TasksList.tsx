@@ -1,42 +1,61 @@
-import { useSelector } from "react-redux"
-import type { TasksState } from "../../features/tasks/tasksSlice"
-import { Card, CardContent, CardDescription, CardTitle, CardHeader, CardFooter  } from "../ui/card"
-import { Switch } from "../ui/switch"
-import { Button } from "../ui/button"
-import { useDispatch } from "react-redux"
-import { deleteTask } from "../../features/tasks/tasksSlice"
+import { useSelector } from "react-redux";
+import type { TasksState } from "../../features/tasks/tasksSlice";
+import { Card} from "../ui/card";
+import { CircleCheck, CircleX } from "lucide-react";
+
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import ActionsDropMenu from "./ActionsDropMenu";
 
 function TasksList() {
-    const dispatch = useDispatch()
-    const tasks = useSelector((state: TasksState) => state.tasks)
-    console.log(tasks)
-
-    const handleDelete = (id: number) => {
-        dispatch(deleteTask(id))
-    }
+  
+  const tasks = useSelector((state: TasksState) => state.tasks);
+  console.log(tasks);
+  
   return (
-    <div className="mt-4 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      {tasks.map((task) => (
-        <Card key={task.id} className="w-72">
-          <CardHeader>
-            <CardTitle className="flex justify-between items-center">
-            <span className="font-bold text-xl">{task.title}</span>
-            <Switch checked={task.completed} />
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <CardDescription>{task.description}</CardDescription>
-          </CardContent>
-          <CardFooter className="flex justify-between items-center ">
-            <Button variant="secondary" size="sm" className="w-20">Edit</Button>
-            <Button 
-            onClick={() => handleDelete(task.id)}
-            variant="destructive" size="sm" className="w-20">Delete</Button>
-          </CardFooter>
-        </Card>
-        ))}
-    </div>
-  )
+    <Card>
+      <Table className="w-full max-w-2xl">
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-24">Id</TableHead>
+            <TableHead>Título</TableHead>
+            <TableHead className="w-52 hidden sm:table-cell">Descripción</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead className="text-right">Acciones</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {tasks.map((task) => (
+            <TableRow key={task.id}>
+              <TableCell>
+                <p className="w-full max-w-20 truncate mr-4 font-mono"> {task.id} </p>
+                </TableCell>
+              <TableCell>
+                <p className="font-semibold flex truncate w-32">{task.title}</p>
+                </TableCell>
+              <TableCell className="w-full max-w-xs hidden sm:table-cell">
+                <p className="truncate my-1.5 mr-3">{task.description}</p>
+              </TableCell>
+              <TableCell>
+                <p className="flex justify-center w-full">
+                {task.completed ? (<CircleCheck size={20} className="text-green-500" />) : (<CircleX size={20} className="text-red-500" />)}
+                </p>
+              </TableCell>
+              <TableCell className="text-center">
+                <ActionsDropMenu id={task.id} />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </Card>
+  );
 }
 
-export default TasksList
+export default TasksList;

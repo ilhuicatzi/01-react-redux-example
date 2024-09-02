@@ -5,9 +5,10 @@ import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { addTask } from "@/features/tasks/tasksSlice";
+import { addTask, editTask } from "@/features/tasks/tasksSlice";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect } from "react";
 import {
   Form,
   FormControl,
@@ -16,18 +17,22 @@ import {
   FormItem,
   FormLabel,
 } from "@/components/ui/form";
-import {v4 as uuid} from 'uuid';
+import { v4 as uuid } from "uuid";
+import { useSelector } from "react-redux";
+import type { TasksState } from "../../features/tasks/tasksSlice";
 
 const FormSchema = z.object({
   id: z.string().default(() => uuid()),
-  title: z.string().min(2,{
-    message: 'El título debe tener al menos 2 caracteres'
+  title: z.string().min(2, {
+    message: "El título debe tener al menos 2 caracteres",
   }),
   description: z.string().optional(),
   completed: z.boolean().default(false).optional(),
 });
 
 function TasksForm() {
+  const { id } = useParams();
+  const tasks = useSelector((state: TasksState) => state.tasks);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -38,10 +43,24 @@ function TasksForm() {
       completed: false,
     },
   });
-  
+
+  useEffect(() => {
+    if (id) {
+      const task = tasks.find((task) => task.id === String(id));
+      if (task) {
+        console.log(task);
+        form.reset({ ...task, id: String(task.id) });
+      }
+    }
+  }, [id, tasks, form]);
+
   function onSubmit(data: z.infer<typeof FormSchema>) {
     console.log(data);
-    dispatch(addTask(data));
+    if(id){
+      dispatch(editTask(data));
+    }else{
+      dispatch(addTask(data));
+    }
     navigate("/");
   }
 
@@ -96,7 +115,7 @@ function TasksForm() {
         </div>
         <div className="flex justify-end">
           <Button type="submit" size="sm">
-            Crear Tarea
+            {id ? "Editar" : "Agregar"}
           </Button>
         </div>
       </form>
