@@ -23,7 +23,7 @@ function TasksList() {
       <Table className="w-full max-w-2xl">
         <TableHeader>
           <TableRow>
-            <TableHead className="w-24">Id</TableHead>
+            <TableHead className="w-24 hidden min-[320px]:table-cell">Id</TableHead>
             <TableHead>Título</TableHead>
             <TableHead className="w-52 hidden sm:table-cell">Descripción</TableHead>
             <TableHead>Status</TableHead>
@@ -33,8 +33,8 @@ function TasksList() {
         <TableBody>
           {tasks.map((task) => (
             <TableRow key={task.id}>
-              <TableCell>
-                <p className="w-full max-w-20 truncate mr-4 font-mono"> {task.id} </p>
+              <TableCell className="hidden min-[320px]:table-cell">
+                <p className="w-full max-w-20 truncate mr-4 font-mono "> {task.id} </p>
                 </TableCell>
               <TableCell>
                 <p className="font-semibold flex truncate w-32">{task.title}</p>
